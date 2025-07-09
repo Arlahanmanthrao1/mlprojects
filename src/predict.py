@@ -1,16 +1,27 @@
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
 import joblib
 
-# Load data
-df = pd.read_csv('data/heart.csv')
-X = df.drop('target', axis=1)
-y = df['target']
+# Load model
+model = joblib.load('model/model.pkl')
 
-# Train model
-model = RandomForestClassifier()
-model.fit(X, y)
+# Sample patient
+sample = pd.DataFrame({
+    'age': [54],
+    'sex': [1],
+    'cp': [0],
+    'trestbps': [130],
+    'chol': [250],
+    'fbs': [0],
+    'restecg': [1],
+    'thalach': [150],
+    'exang': [0],
+    'oldpeak': [1.2],
+    'slope': [1],
+    'ca': [0],
+    'thal': [2]
+})
 
-# Save model
-joblib.dump(model, 'model/model.pkl')
-print(" Heart disease model trained.")
+# Predict
+prediction = model.predict(sample)[0]
+risk = "At Risk" if prediction == 1 else " Low Risk"
+print(f" Prediction: {prediction} ({risk})")
